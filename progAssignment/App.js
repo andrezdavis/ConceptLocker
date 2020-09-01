@@ -12,12 +12,7 @@ import {
 export default function App() {
   const [value1, setValue1] = useState("");
   const [value2, setValue2] = useState("");
-  useEffect(() => {
-    axios
-      .get("http://localhost:9000/")
-      .then((res) => alert(res.data))
-      .catch((err) => alert(err));
-  }, []);
+
   const submitFirestore = () => {
     axios
       .post("http://localhost:9000/setup/", {
@@ -25,7 +20,7 @@ export default function App() {
         field2: value2,
       })
       .then(function (response) {
-        console.log("valid url");
+        console.log(response.data);
       })
       .catch(function (error) {
         console.log("Not working", error);
