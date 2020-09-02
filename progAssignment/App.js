@@ -7,11 +7,13 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  // FlatList,
 } from "react-native";
 
 export default function App() {
   const [value1, setValue1] = useState("");
   const [value2, setValue2] = useState("");
+  // const [data, setData] = useState([]);
 
   const submitFirestore = () => {
     axios
@@ -22,6 +24,20 @@ export default function App() {
       .then(function (response) {
         console.log(response.data);
       })
+      .catch(function (error) {
+        console.log("Not working", error);
+      });
+  };
+
+  const getFirestore = () => {
+    axios
+      .get("http://localhost:9000/data")
+      .then(function (response) {
+        console.log(response.data);
+      })
+      // .then(({ data }) => {
+      //   setData(data)
+      // })
       .catch(function (error) {
         console.log("Not working", error);
       });
@@ -41,6 +57,15 @@ export default function App() {
       <TouchableOpacity onPress={submitFirestore}>
         <Text> Submit to firestore! </Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={getFirestore}>
+        <Text> View data from firestore! </Text>
+      </TouchableOpacity>
+      {/* <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <Text>{item.field1}, {item.field2}</Text>
+          )}
+        /> */}
       <StatusBar style="auto" />
     </View>
   );
