@@ -8,7 +8,7 @@ Open up a terminal
 
 type 'git clone https://github.com/andrezdavis/ProgAssignment.git'
 
-type 'cd ProgAssignment'
+type 'cd ProgrammingAssignment'
 
 type 'cd api'
 
