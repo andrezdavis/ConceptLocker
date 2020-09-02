@@ -6,6 +6,7 @@ var serviceAccount = require("../serviceAccountKey.json");
 
 var db;
 
+//fetches all the documents from firestore
 router.get("/", function (req, res, next) {
   db = admin.firestore();
   //console.log(req.body);

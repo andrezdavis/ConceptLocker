@@ -29,6 +29,7 @@ export default function App() {
       });
   };
 
+  //Displays the data in server console
   const getFirestore = () => {
     axios
       .get("http://localhost:9000/data")
@@ -58,7 +59,7 @@ export default function App() {
         <Text> Submit to firestore! </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={getFirestore}>
-        <Text> View data from firestore! </Text>
+        <Text> View data from firestore (in server console for now)! </Text>
       </TouchableOpacity>
       {/* <FlatList
           data={data}
