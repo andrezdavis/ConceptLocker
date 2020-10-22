@@ -44,7 +44,6 @@ export default function DetailsSearch() {
 ;
   
   const getSimilarity = (sentence, phrase) => {
-      console.log("insid")
     axios({
         method: 'post',
         url: 'https://apis.paralleldots.com/v4/similarity',
@@ -77,7 +76,7 @@ export default function DetailsSearch() {
         onChangeText={(text) => setValue2(text)}
         value={value2}
       />
-      <TouchableOpacity onPress={() => getSimilarity("You had one job", "job hunt")}>
+      <TouchableOpacity onPress={() => getSimilarity("You had one job", "I have to go to the store")}>
         <Text> Details Search! </Text>
       </TouchableOpacity>
       
