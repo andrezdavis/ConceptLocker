@@ -31,14 +31,8 @@ export default function DetailsResults() {
   
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.inputBox}
-        onChangeText={(text) => setValue1(text)}
-        value={value1}
-      />
-      <TouchableOpacity >
-        <Text> Details Results! </Text>
-      </TouchableOpacity>
+        <Text>Results</Text>
+    
       
       <StatusBar style="auto" />
     </View>
