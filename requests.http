@@ -1,0 +1,18 @@
+###
+POST https://api.monkeylearn.com/v3/extractors/ex_Y8EEfTKJ/extract/
+Authorization:Token df54194010c9c38f93075ca244fe4ff57b165c23
+Content-Type: application/json
+
+{
+    "data": ["Google is an American multinational technology company that specializes in Internet-related services and products. These include online advertising technologies, search, cloud computing, software, and hardware. Google was founded in 1998 by Larry Page and Sergey Brin while they were Ph.D. students at Stanford University, in California."]
+}
+
+###
+POST https://api.monkeylearn.com/v3/extractors/ex_YCya9nrn/extract/
+Authorization:Token df54194010c9c38f93075ca244fe4ff57b165c23
+Content-Type: application/json
+
+{
+  "data": ["Elon Musk has shared a photo of the spacesuit designed by SpaceX. This is the second image shared of the new design and the first to feature the spacesuit’s full-body look."]
+}
+###

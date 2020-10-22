@@ -1,6 +1,12 @@
 import { StatusBar } from "expo-status-bar";
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import DetailsSearch from "./screens/DetailsSearch"
+import DetailsResults from "./screens/DetailsResults"
+
 import {
   StyleSheet,
   Text,
@@ -9,6 +15,10 @@ import {
   TouchableOpacity,
   // FlatList,
 } from "react-native";
+
+const Tab = createBottomTabNavigator();
+
+
 
 export default function App() {
   const [value1, setValue1] = useState("");
@@ -43,24 +53,26 @@ export default function App() {
         console.log("Not working", error);
       });
   };
+
+  // const getTextSummarization = () => {
+  //   axios
+  //     .post("https://api.deepai.org/api/summarization", {
+  //       text: "Summarize this text. I am writing text in here and I want it summarized. Please don't make this look terrible please."
+  //     })
+  //     .then(function (response) {
+  //       console.log(response.data);
+  //     })
+  //     .catch(function (error) {
+  //       console.log("Not working", error);
+  //     });
+  // }
+  
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.inputBox}
-        onChangeText={(text) => setValue1(text)}
-        value={value1}
-      />
-      <TextInput
-        style={styles.inputBox}
-        onChangeText={(text) => setValue2(text)}
-        value={value2}
-      />
-      <TouchableOpacity onPress={submitFirestore}>
-        <Text> Submit to firestore! </Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={getFirestore}>
-        <Text> View data from firestore (in server console for now)! </Text>
-      </TouchableOpacity>
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Details Search" component={DetailsSearch} />
+        <Tab.Screen name="Details Results" component={DetailsResults} />
+      </Tab.Navigator>
       {/* <FlatList
           data={data}
           renderItem={({ item }) => (
@@ -68,7 +80,8 @@ export default function App() {
           )}
         /> */}
       <StatusBar style="auto" />
-    </View>
+    </NavigationContainer>
+    
   );
 }
 
