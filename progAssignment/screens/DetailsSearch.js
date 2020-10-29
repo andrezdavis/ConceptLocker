@@ -15,6 +15,7 @@ export default function DetailsSearch() {
   const [value2, setValue2] = useState("");
   let detailedSentences = []
   let sentences = []
+  let similarityTrack = []
   // const [data, setData] = useState([]);
 
   const getSentences = () => {
@@ -52,18 +53,38 @@ export default function DetailsSearch() {
           'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
         }
       }).then(function(response) {
-        console.log(response.data);
-        return response.data
+        similarityTrack = []
+        if (response.data['similarity_score'] >= .4) {
+            detailedSentences.push(sentence)
+        }
+        similarityTrack.push([response.data['similarity_score'], sentence])
       }).catch(function (error) {
         console.log("Not working", error);
       });
   } 
-//   const getDetailedSentences = () => {
-//       detailedSentences = []
-//       sentences.forEach((sentence) => {
-//           if ()
-//       })    
-//   }
+  const getDetailedSentences = () => {
+      detailedSentences = []
+      sentences.forEach((sentence) => {
+          getSimilarity(sentence, value1)
+      })
+      
+  }
+  const checkdSSize = () => {
+    if (detailedSentences.length == 0) {
+      similarityTrack.sort(function(a, b){return b[0]-a[0]})
+      if (similarityTrack.length == 0 || similarityTrack[0] === undefined ) {
+        console.log("There are no matches")
+        getDetailedSentences()
+        return
+      }
+      if(similarityTrack[0][0] === undefined || similarityTrack[0][0] < .1) {
+        console.log("There are no matches")
+        return
+      }
+      detailedSentences.push(similarityTrack[0])
+      console.log(detailedSentences)
+    }
+  }
   return (
     <View style={styles.container}>
       <TextInput
@@ -76,7 +97,13 @@ export default function DetailsSearch() {
         onChangeText={(text) => setValue2(text)}
         value={value2}
       />
-      <TouchableOpacity onPress={() => getSimilarity("You had one job", "I have to go to the store")}>
+      <TouchableOpacity onPress={() => {
+          getSentences();
+          getDetailedSentences();
+          checkdSSize();
+          // console.log(similarityTrack)
+          // console.log(detailedSentences)
+      }}>
         <Text> Details Search! </Text>
       </TouchableOpacity>
       
