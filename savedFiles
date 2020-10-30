@@ -1,0 +1,40 @@
+Andre Davis Updated Proposal
+Sprint 2 Individual Assignment
+
+Regarding Sprint 2, I reideated approaches, set up the google form to interview students about current solutions and 
+their shortcomings in the education/learning space, expanded on the approach that the team decided to move forward with 
+and added a couple of technologies and API’s.
+
+The approaches we had in Sprint 1 were considered to be not unique and non-novel. I understood that the approaches were 
+not detailed enough and that at the time, we did not do enough research when generating our approaches. I thought about 
+new approaches that were distinct based on exploring and searching analogues and what people would find useful that 
+lacks in current solutions. After creating three approaches, I decided to go with creating a tool that can take 
+keywords or phrases of information (related textbooks and Q&A platforms) and return main and supporting details from 
+it. It was very unique and so far has received pretty good class feedback.
+
+As we lacked data in Sprint 1, I figured I create a google form to get more information about how we can actually 
+create an impactful solution. Another teammate of mine, Prerna, added some great questions and modified previous 
+questions to the Google Form. I contributed the following: Asking major and year, if Piazza, Chegg, etc. help or 
+slightly help or don’t help, reason for low performance in a class, favorite solution and the shortcoming to it. I 
+gathered a lot of insight  from these questions. Interviewees (GT Students) tended to like solutions that guided them 
+through the similar problems they were inquiring about or had explained a concept thoroughly to which they could apply 
+it to the problem. What their favorite solutions lacked were availability, sometimes explanations are not sufficient, 
+lack of helpful resources. Our approach leverages all of these shortcomings.
+
+Because I ideated and chose the approach, I decided to discuss the approach and thought process for choosing it. Our 
+original approaches were not sufficient so I created new ones and the one I chose from the new ones seemed to leverage 
+most of the pain points that students have. This approach is something I believe the team is capable of finishing by 
+this semester and I am excited to create it.
+
+From Sprint 1, the team was already fixed on using React Native (Frontend Mobile Development), Node.js (Backend Library 
+for Javascript), Express.js, and VS Code. After doing research and ideation for the prototype, I considered using 
+native files API’s, Google Drive API, DeepAI Text Analysis API, and Dandelion API. Google Drive API would be used for 
+file uploading directly from a user’s Google Drive account. Using API’s with AI and ML are going to be very integral to 
+our solution, so we will leverage DeepAI and Dandelion for that. The Text Analysis API will be responsible for tagging 
+text, which extracts relevant words from a text and classifies the document. There is still more room to decide how to 
+use text tagging. It will also be responsible for text summarization, it will be used to summarize the text that is 
+output from the
+
+‘Details Search’ if the user allows for it. Lastly, the Dandelion API will be used to match input texts together. So we 
+will use the keywords or text from the user and compare it to an entire source. This will be the Details Search. There 
+is still more room for ideation on this however.

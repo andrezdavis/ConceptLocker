@@ -106,6 +106,8 @@ export default function DetailsSearch() {
       }}>
         <Text> Details Search! </Text>
       </TouchableOpacity>
+
+      
       
       <StatusBar style="auto" />
     </View>

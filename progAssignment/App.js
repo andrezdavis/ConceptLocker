@@ -6,6 +6,7 @@ import axios from "axios";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DetailsSearch from "./screens/DetailsSearch"
 import DetailsResults from "./screens/DetailsResults"
+import FileUpload from "./screens/FileUpload"
 
 import {
   StyleSheet,
@@ -15,6 +16,7 @@ import {
   TouchableOpacity,
   // FlatList,
 } from "react-native";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -72,6 +74,7 @@ export default function App() {
       <Tab.Navigator>
         <Tab.Screen name="Details Search" component={DetailsSearch} />
         <Tab.Screen name="Details Results" component={DetailsResults} />
+        <Tab.Screen name="File Upload" component={FileUpload} />
       </Tab.Navigator>
       {/* <FlatList
           data={data}
