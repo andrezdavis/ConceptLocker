@@ -18,16 +18,16 @@ import ThemeContext from "../contexts/ThemeContext";
 export default function DetailsSearch({route, navigation}) {
   let {flatText, textBox, textInput, scrollContainer,button,buttonText} = styles;
   const [query, setQuery] = useState("");
-  let detailedSentences = []
+  const [detailedSentences, setDS] = useState([])
   let sentences = []
-  let similarityTrack = []
+  const [similarityTrack, setST] = useState([])
   // const [data, setData] = useState([]);
   useEffect(() => {
     
     getSentences(route.params.text.toString())
   }, []);
   let {id, name, text} = route.params
-  const getSentences = (text) => {
+  const getSentences = async (text) => {
     text = text.replace(/(\r\n|\n|\r)/gm," ");
     text = text.replace(/\s+/g," ");
     text = text.replace(/(\\|-)/gm,"");
@@ -47,13 +47,13 @@ export default function DetailsSearch({route, navigation}) {
         console.log(i)
       }
     }
-    data.forEach((element) => {
-      axios
+    data.forEach(async(element) => {
+      await axios
       .post("https://api.monkeylearn.com/v3/extractors/ex_Y8EEfTKJ/extract/", {
         "data": [element]
           }, {
         headers: {
-            Authorization:"Token df54194010c9c38f93075ca244fe4ff57b165c23",
+            Authorization:"Token 81235296f602346f1906cb85a39f049d06d915bd",
             "Content-Type": "application/json"
         }
       }
@@ -82,42 +82,43 @@ export default function DetailsSearch({route, navigation}) {
         method: 'post',
         url: 'https://apis.paralleldots.com/v4/similarity',
         data: "text_1=" + sentence + "&text_2=" + phrase + "&api_key=2IlEShMFGvqsg1zFZfHpxw3v1cHuTUPt9szX0GGrvyo",
+        // data: "text_1=Hey guys my name jeff&text_2=who is jeff?&api_key=2IlEShMFGvqsg1zFZfHpxw3v1cHuTUPt9szX0GGrvyo",
         headers: {
-          'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+          'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+          'Access-Control-Allow-Origin': '*'
         }
       }).then(function(response) {
-        similarityTrack = []
-        if (response.data['similarity_score'] >= .4) {
-            detailedSentences.push(sentence)
+        setST(similarityTrack.filter(obj => obj.score != undefined))
+        console.log("similarityTrack") 
+        if (response.data['similarity_score'] >= .2) {
+            setDS([...detailedSentences, sentence])
         }
-        similarityTrack.push([response.data['similarity_score'], sentence])
+        setST([...similarityTrack, {"score" : response.data['similarity_score'], "sentence": sentence}])
       }).catch(function (error) {
         console.log("Not working", error);
       });
   } 
   const getDetailedSentences = () => {
-      detailedSentences = []
-      // sentences.forEach((sentence) => {
-        for (let i = 0; i < 10; i++) {
-          getSimilarity(sentences[i], query)
-        }
-      // })
-      
+      sentences.forEach((sentence) => {
+          getSimilarity(sentence, query)
+      })
+      detailedSentences.forEach(val => console.log(val))
+      similarityTrack.forEach(val => console.log(val))
+      checkdSSize();
+
   }
   const checkdSSize = () => {
     if (detailedSentences.length == 0) {
       similarityTrack.sort(function(a, b){return b[0]-a[0]})
       if (similarityTrack.length == 0 || similarityTrack[0] === undefined ) {
-        console.log("There are no matches")
-        getDetailedSentences()
-        return
+        setDS([...detailedSentences])
       }
-      if(similarityTrack[0][0] === undefined || similarityTrack[0][0] < .1) {
-        console.log("There are no matches")
-        return
+      else if(similarityTrack[0].score === undefined || similarityTrack[0].score < .2) {
+        setDS([...detailedSentences, "there are no mtaches"])
+      } else {
+        setDS([...detailedSentences, similarityTrack[0]])
       }
-      detailedSentences.push(similarityTrack[0])
-      console.log(detailedSentences)
+      
     }
   }
   
@@ -142,9 +143,6 @@ export default function DetailsSearch({route, navigation}) {
                
                 <TouchableOpacity onPress={() => {
           getDetailedSentences();
-          checkdSSize();
-          // console.log(similarityTrack)
-          // console.log(detailedSentences)
       }}>
         <View style={styles.button}>
           <Text 
@@ -159,7 +157,7 @@ export default function DetailsSearch({route, navigation}) {
     </TouchableOpacity>
                 <View> 
                     <ScrollView style={scrollContainer}>
-                        <Text style={flatText}>test</Text>
+                        <Text style={flatText}>{detailedSentences}</Text>
                         
                        
 
