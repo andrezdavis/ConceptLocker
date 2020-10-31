@@ -6,77 +6,57 @@ import * as DocumentPicker from 'expo-document-picker';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as FileSystem from 'expo-file-system';
 import {Text,View,ImageBackground,Image,StyleSheet,TouchableOpacity} from 'react-native';
-import { WebView } from 'react-native-webview';
 
-export default function FileUpload() {
-  let multipleFile = []
-  let showFileSystem = false
-function readTextFile(filePath)
-{
+export default function FileUpload({navigation}) {
     
-}
-function deleteFile(filePath) {
-    FileSystem.deleteAsync(filePath).then((res) => console.log(res)).catch((err) => console.log(err))
-}
-let htmlRead = `
-                <!DOCTYPE html>
-                <html>
-                <script>
-                    function requestConvert() {
-                            alert(document.getElementById('clickforfile').files[0].name)
-                            axios({
-                                method: 'post',
-                                url: 'https://stormy-lake-40009.herokuapp.com/',
-                                data: {
-                                    "stuff": document.getElementById('clickforfile').files[0].name
-                                  }
-                              });
-                    }
-                    jQuery(function(){
-                        jQuery('#clickforfile').click();
-                     });
-                </script>
-                <body>
-                <input id="clickforfile" type="file" name="filetoupload">
-                <button onclick="requestConvert()">Submit File</button>    
-                <p id="p1">Hello everyone</p>
-                
-                </body>
-                </html>
-                `
+
+
+    let multipleFile = []
+    const sendFile = () => {
+        axios({
+            method: 'post',
+            url: 'https://stormy-lake-40009.herokuapp.com/',
+            data: {
+                "uri": "https://global.oup.com/us/companion.websites/9780199812998/studentresources/pdf/perry_glossary.pdf"
+            }
+        }).then((res) =>{
+            console.log(res)
+            multipleFile.push(res)
+        } 
+        ).catch((err) => console.log(err));
+    }
+
                 
 return (
 
-    
    <ImageBackground source={require('../images/bg2.png')} 
       style={{width: '100%', height: '100%'}}>
           
-            <WebView source={{ html: htmlRead }} style={styles.container} />
           <View>
               
-              <TouchableOpacity onPress={async() => {
-                FileSystem.downloadAsync(
-                    'https://www.troup.k12.ga.us/userfiles/929/My%20Files/HS%20Math/advanced_algebra/Unit%202%20and%203%20Polynomials/PascalsTriangle.pdf?id=14074',
-                    FileSystem.documentDirectory + 'pascaltriangle.pdf'
-                  )
-                    .then(({ uri }) => {
-                      console.log('Finished downloading to ', uri);
-                    })
-                    .catch(error => {
-                      console.error(error);
-                    });
-                // DocumentPicker.getDocumentAsync().then((res) => {
-                // multipleFile.push(res)
-                // readFile(res["uri"])
-               
-                // FileSystem.moveAsync("progAssignment/readfilepls.txt", FileSystem.documentDirectory + "readfilepls.txt").then((res) => {console.log(res)})
-                
-                // })
-                readTextFile('file://C:/Users/AndreGamingPC/DevelopmentFolder/ProgrammingAssignment/progAssignment/readfilepls.txt')
+              <TouchableOpacity onPress={() => {
+                // FileSystem.downloadAsync(
+                //     'https://www.troup.k12.ga.us/userfiles/929/My%20Files/HS%20Math/advanced_algebra/Unit%202%20and%203%20Polynomials/PascalsTriangle.pdf?id=14074',
+                //     FileSystem.documentDirectory + 'pascaltriangle.pdf'
+                //   )
+                //     .then(({ uri }) => {
+                //       console.log('Finished downloading to ', uri);
+                //     })
+                //     .catch(error => {
+                //       console.error(error);
+                //     });
+                DocumentPicker.getDocumentAsync().then((res) => {
+                    console.log(res)
+                    if (res.type == 'success') {
+                    sendFile()
+                    } else {
+                        console.log('you cancelled')
+                    }
+                })
 
-                let dir = await FileSystem.readDirectoryAsync(FileSystem.documentDirectory);
-                console.log(FileSystem.documentDirectory)
-                  }} style={{alignItems: 'center'}}>
+                
+            }} 
+                  style={{alignItems: 'center'}}>
                   <Image source ={require('../images/cloud.png')}
                           style={styles.image}        
                   />
@@ -103,14 +83,14 @@ return (
               </View>
           ))}
       </ScrollView>
-
-      <View style={styles.button}>
-          <Text onPress={() => { navigation.navigate('DetailResult')}}
-          style={styles.buttonText}>Start Detail Search</Text>
+    <TouchableOpacity onPress={() => { navigation.navigate('Details Search')}}>
+    <View style={styles.button}>
+          <Text 
+          style={styles.buttonText}>Next</Text>
       </View>
+    </TouchableOpacity>
+      
   </ImageBackground> 
-
-
 );
 }
 

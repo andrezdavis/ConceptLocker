@@ -22,3 +22,44 @@
 //         console.log("Not working", error);
 //       });
 //   }
+ // const submitFirestore = () => {
+  //   axios
+  //     .post("http://localhost:9000/setup/", {
+  //       field1: value1,
+  //       field2: value2,
+  //     })
+  //     .then(function (response) {
+  //       console.log(response.data);
+  //     })
+  //     .catch(function (error) {
+  //       console.log("Not working", error);
+  //     });
+  // };
+
+  // //Displays the data in server console
+  // const getFirestore = () => {
+  //   axios
+  //     .get("http://localhost:9000/data")
+  //     .then(function (response) {
+  //       console.log(response.data);
+  //     })
+  //     // .then(({ data }) => {
+  //     //   setData(data)
+  //     // })
+  //     .catch(function (error) {
+  //       console.log("Not working", error);
+  //     });
+  // };
+
+  // const getTextSummarization = () => {
+  //   axios
+  //     .post("https://api.deepai.org/api/summarization", {
+  //       text: "Summarize this text. I am writing text in here and I want it summarized. Please don't make this look terrible please."
+  //     })
+  //     .then(function (response) {
+  //       console.log(response.data);
+  //     })
+  //     .catch(function (error) {
+  //       console.log("Not working", error);
+  //     });
+  // }

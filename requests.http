@@ -26,10 +26,10 @@ text_1=Hey guys my name jeff&text_2=who is jeff?&api_key=2IlEShMFGvqsg1zFZfHpxw3
 POST https://upload.box.com/api/2.0/files/content/
 Authorization: Bearer [ACCESS_TOKEN]
 ###
-POST http://localhost:9000
+POST http://localhost:9000/
 Content-Type: application/json
 
 {
-  "stuff": "C:/Users/AndreGamingPC/DevelopmentFolder/ProgrammingAssignment/progAssignment/readfilepls.pdf"
+  "uri": "https://global.oup.com/us/companion.websites/9780199812998/studentresources/pdf/perry_glossary.pdf"
 }
 ###

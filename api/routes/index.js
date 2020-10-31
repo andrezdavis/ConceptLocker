@@ -2,46 +2,38 @@ var express = require('express');
 var router = express.Router();
 var convertapi = require('convertapi')('eLH1ZL1XCpw5xaZz');
 var fs = require('fs');
-
-/* GET home page. */
+var https = require('https')
+const path = require('path')
+/* GET home page. */ 
 router.get('/', function(req, res, next) {
-  // var data = fs.readFileSync();
-  // console.log("Synchronous read: " + data.toString());
   res.render('index', { title: 'Express' });
-//   var data = fs.readFileSync(req.body.);
-// console.log("Synchronous read: " + data.toString());
-
-
 });
+
+function remove(str) { 
+  return str.replace(/[\r\n]+/gm, "   " ); 
+} 
+
 router.post('/', function(req, res, next) {
-  // var data = fs.readFileSync();
-  // console.log("Synchronous read: " + data.toString());
-  // res.render('index', { title: 'Express' });
-//   var data = fs.readFileSync(req.body.);
-// console.log("Synchronous read: " + data.toString());
-console.log(req.body)
+
 convertapi.convert('txt', {
-    File: req.body['stuff']
+    File: req.body.uri
 }, 'pdf').then(function(result) {
-  var data
   console.log(result.response)
   console.log(result.response.Files[0].Url)
-  res.send(result.response.Files[0].Url)
-//   try {
-//     data = fs.readFileSync(files, 'utf8');
-// } catch(e) {
-//     console.log('Error:', e.stack);
-// }
-// console.log(data.toString());    
-// res.send(data.toString())
-    // console.log("Synchronous read: " + data.toString());
-    
+  let text = ""
+  https.get(result.response.Files[0].Url).on('response', function (response) {
+    response.on('data', function (chunk) {
+          text += chunk
+        })
+    response.on('close', function() {
+      text = remove(text)
+      res.send({'filename': req.body.uri.substring(req.body.uri.lastIndexOf("/") + 1), 'text': text})
+    })
+      });
+  
+  });
 });
 
-
-
-
-});
 
 
 module.exports = router;

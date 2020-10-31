@@ -1,56 +1,54 @@
 import React from 'react';
-import {Text,View,ImageBackground, TextInput, StyleSheet} from 'react-native';
-import * as Font from 'expo-font';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-// import Icon from 'npm install @expo/vector-icons';
+import {Text,View,ImageBackground, TextInput,StyleSheet, TouchableOpacity} from 'react-native';
+import Icon from '@expo/vector-icons/AntDesign';
 
-export default class Login extends React.Component{
+export default class Register extends React.Component{
 
-    render(){ 
-
+    render(){
+        
         const {navigate} = this.props.navigation
         let {title,button,buttonText,textFieldemail,textFieldepw} = styles;
+
         return(
+
             <ImageBackground source={require('../images/bg.png')} 
                 style={{width: '100%', height: '100%'}}>
-                <Text style={title}>Concept Locker</Text>
+                <Text
+                 style={title}
+                >Sign Up</Text>
 
+                
                 <View style={textFieldemail}>
-                    {/* <Icon name="mail" color="#969696" size={24}/> */}
                     <TextInput 
                         placeholder="Email"
                         placeholderTextColor="#696969"
                         style={{paddingHorizontal:10}}
                     />
-
                 </View>
                 <View style={textFieldepw}>
-                    {/* <Icon name="lock" color="#969696" size={24}/> */}
-                    <TextInput 
+                   <TextInput 
                         secureTextEntry
                         placeholder="Password"
                         placeholderTextColor="#696969"
                         style={{paddingHorizontal:10}}
                     />
                 </View>
-            <TouchableOpacity onPress={()=>navigate('File Upload')}>
-            <View style={button}>
-                <Text 
-                    style={buttonText}>Log in</Text>
+                <View style={textFieldepw}>
+                   <TextInput 
+                        secureTextEntry
+                        placeholder="Confirm Password"
+                        placeholderTextColor="#696969"
+                        style={{paddingHorizontal:10}}
+                    />
                 </View>
-            </TouchableOpacity>
+                <TouchableOpacity onPress={()=>navigate('Login')}>
+                <View style={button}>
+                    <Text 
+                    style={buttonText}>Register</Text>
+                </View>
+                </TouchableOpacity>
                 
-
-                <Text onPress={()=>navigate('Register')}
-                style={{
-                    alignSelf:"center",
-                    color:"#000000",
-                    //fontFamily:"SemiBold",
-                    paddingVertical:20
-                }}>Don't have an account?</Text>
-            
             </ImageBackground>
-            
         )
     }
 }
@@ -63,6 +61,7 @@ const styles = StyleSheet.create({
         alignSelf:"center",
         marginTop:200,
     },
+    
     textFieldemail: {
         flexDirection:"row",
         alignItems:"center",
@@ -74,6 +73,7 @@ const styles = StyleSheet.create({
         borderRadius:23,
         paddingVertical:10
         },
+
     textFieldepw: {
         flexDirection:"row",
         alignItems:"center",
