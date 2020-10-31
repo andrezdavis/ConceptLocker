@@ -1,17 +1,29 @@
 
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import * as DocumentPicker from 'expo-document-picker';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as FileSystem from 'expo-file-system';
-import {Text,View,ImageBackground,Image,StyleSheet,TouchableOpacity} from 'react-native';
-
-export default function FileUpload({navigation}) {
-    
-
-
-    let multipleFile = []
+import {Text,View,ImageBackground,Image,StyleSheet,TouchableOpacity,FlatList,Button} from 'react-native';
+export default function FileUpload({route, navigation}) {
+    const [multipleFile, setMF] = useState([])
+    const addEntry = (data) => {
+       let newObj = {
+            "id": randId(),
+            "name" : data.filename,
+            "text" : data.text,
+        }
+        setMF([...multipleFile, newObj]);
+        console.log(multipleFile)
+    };
+    const randId = () => {
+        let id = ''
+        for (var i = 0; i < 10; i++) {
+            id += String.fromCharCode(Math.trunc(Math.random()*85) + 48)
+        }
+        return id
+    }
     const sendFile = () => {
         axios({
             method: 'post',
@@ -20,12 +32,14 @@ export default function FileUpload({navigation}) {
                 "uri": "https://global.oup.com/us/companion.websites/9780199812998/studentresources/pdf/perry_glossary.pdf"
             }
         }).then((res) =>{
-            console.log(res)
-            multipleFile.push(res)
+           addEntry(res.data)
+           
         } 
         ).catch((err) => console.log(err));
     }
-
+    const renderItem = ({ item }) => (
+    <Text>{item.name}</Text>
+      );
                 
 return (
 
@@ -33,18 +47,8 @@ return (
       style={{width: '100%', height: '100%'}}>
           
           <View>
-              
+          
               <TouchableOpacity onPress={() => {
-                // FileSystem.downloadAsync(
-                //     'https://www.troup.k12.ga.us/userfiles/929/My%20Files/HS%20Math/advanced_algebra/Unit%202%20and%203%20Polynomials/PascalsTriangle.pdf?id=14074',
-                //     FileSystem.documentDirectory + 'pascaltriangle.pdf'
-                //   )
-                //     .then(({ uri }) => {
-                //       console.log('Finished downloading to ', uri);
-                //     })
-                //     .catch(error => {
-                //       console.error(error);
-                //     });
                 DocumentPicker.getDocumentAsync().then((res) => {
                     console.log(res)
                     if (res.type == 'success') {
@@ -71,8 +75,13 @@ return (
       <View style={styles.listHeader}>
           <Text style={{textAlign: 'center', fontSize: 18}}> File List </Text>
       </View>
-      <ScrollView style={styles.scrollContainer}>
-          {multipleFile.forEach((item) => (
+        <FlatList
+        style={styles.scrollContainer}
+            data={multipleFile}
+            renderItem={renderItem}
+            keyExtractor={item => item.id.toString()}
+        />
+          {/* {multipleFile.forEach((item) => (
               <View>
                   <Text style={styles.flatText}>
                       {item.name ? item.name : ''} 
@@ -81,9 +90,13 @@ return (
                       <Text style={styles.deleteText} onPress={()=>{this.deleteFiles(key)}}> delete </Text>
                   </Text>
               </View>
-          ))}
-      </ScrollView>
-    <TouchableOpacity onPress={() => { navigation.navigate('Details Search')}}>
+          ))} */}
+          
+    <TouchableOpacity onPress={() => {
+        // console.log(multipleFile[0].name)
+        navigation.navigate('Details Search', 
+            multipleFile[0]
+          )}}>
     <View style={styles.button}>
           <Text 
           style={styles.buttonText}>Next</Text>

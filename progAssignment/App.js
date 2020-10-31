@@ -12,6 +12,7 @@ import Register from "./screens/Register"
 import Tutorial from "./screens/Tutorial"
 import Icon from 'react-native-vector-icons/Ionicons';
 
+
 import {
   StyleSheet,
   Text,
@@ -20,12 +21,15 @@ import {
   TouchableOpacity,
   // FlatList,
 } from "react-native";
+import ThemeContextProvider from "./contexts/ThemeContext";
 
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const FileUploadStack = ({navigation}) => (
+
+const FileUploadStack = ({route, navigation}) => (
+
   <Stack.Navigator screenOptions={{
           headerStyle: {
           backgroundColor: '#009387',
@@ -35,10 +39,11 @@ const FileUploadStack = ({navigation}) => (
           fontWeight: 'bold'
           }
       }}>
-          <Stack.Screen name="File Upload" component={FileUpload} options={{
+          <Stack.Screen name="File Upload" component={FileUpload} initialParams={{ itemId: 42 }} options={{
           title:'Concept Locker'
           }} />
   </Stack.Navigator>
+
   );
 
   const DetailsSearchStack = ({navigation}) => (
@@ -51,7 +56,7 @@ const FileUploadStack = ({navigation}) => (
             fontWeight: 'bold'
             }
         }}>
-            <Stack.Screen name="Details Search" component={DetailsSearch} options={{
+            <Stack.Screen name="Details Search" component={DetailsSearch}  options={{
             title:'Concept Locker'
             }} />
     </Stack.Navigator>
@@ -88,6 +93,8 @@ const FileUploadStack = ({navigation}) => (
           </Stack.Navigator>
           );
           const TutorialStack = ({navigation}) => (
+        <ThemeContextProvider>
+            
             <Stack.Navigator screenOptions={{
                     headerStyle: {
                     backgroundColor: '#009387',
@@ -101,6 +108,8 @@ const FileUploadStack = ({navigation}) => (
                     title:'Concept Locker'
                     }} />
             </Stack.Navigator>
+        </ThemeContextProvider>
+
             );
 export default function App() {
   
@@ -111,17 +120,18 @@ export default function App() {
  
   
   return (
+
       <NavigationContainer>
       {/* <Tab.Navigator>
         <Tab.Screen name="Details Search" component={DetailsSearch} />
         <Tab.Screen name="File Upload" component={FileUploadStack} />
       </Tab.Navigator> */}
       <Stack.Navigator initialRouteName="Tutorial">
-        <Stack.Screen name="Tutorial" component={TutorialStack}/>
-        <Stack.Screen name="Login" component={LoginStack}/>
-        <Stack.Screen name="Register" component={RegisterStack}/>
-        <Stack.Screen name="File Upload" component={FileUploadStack}/>
-        <Stack.Screen name="Details Search" component={DetailsSearchStack}/>
+        <Stack.Screen name="Tutorial" component={Tutorial}/>
+        <Stack.Screen name="Login" component={Login}/>
+        <Stack.Screen name="Register" component={Register}/>
+        <Stack.Screen name="File Upload" component={FileUpload}/>
+        <Stack.Screen name="Details Search" component={DetailsSearch}/>
       </Stack.Navigator>
       {/* <FlatList
           data={data}
@@ -131,6 +141,8 @@ export default function App() {
         /> */}
       <StatusBar style="auto" />
     </NavigationContainer>
+    
+
   );
 }
 

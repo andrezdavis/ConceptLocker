@@ -9,8 +9,13 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-function remove(str) { 
-  return str.replace(/[\r\n]+/gm, "   " ); 
+function remove(text) { 
+  text = text.replace(/(\r\n|\n|\r)/gm," ");
+    text = text.replace(/\s+/g," ");
+    text = text.replace(/(\\|-)/gm,"");
+    text = text.replace(/\\/g, '');
+    text = text.replace(/(“|”|’)/g, "")
+    return text
 } 
 
 router.post('/', function(req, res, next) {

@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import axios from "axios";
 import {
   StyleSheet,
@@ -11,20 +11,46 @@ import {
   // FlatList,
 } from "react-native";
 import {FlatList, ScrollView} from 'react-native-gesture-handler';
+import ThemeContext from "../contexts/ThemeContext";
 
-export default function DetailsSearch({navigation}) {
+
+
+export default function DetailsSearch({route, navigation}) {
   let {flatText, textBox, textInput, scrollContainer,button,buttonText} = styles;
-  const [value1, setValue1] = useState("");
-  const [value2, setValue2] = useState("");
+  const [query, setQuery] = useState("");
   let detailedSentences = []
   let sentences = []
   let similarityTrack = []
   // const [data, setData] = useState([]);
-
-  const getSentences = () => {
-    axios
+  useEffect(() => {
+    
+    getSentences(route.params.text.toString())
+  }, []);
+  let {id, name, text} = route.params
+  const getSentences = (text) => {
+    text = text.replace(/(\r\n|\n|\r)/gm," ");
+    text = text.replace(/\s+/g," ");
+    text = text.replace(/(\\|-)/gm,"");
+    text = text.replace(/\\/g, '');
+    text = text.replace(/(“|”|’)/g, "")
+    let i = 0
+    let data = []
+    for (i = 0; i < text.length;) {
+      console.log('big money')
+      if (i + 40000 < text.length) {
+      data.push(text.substring(i, text.substring(i, i + 40000).lastIndexOf(".")))
+      i+=text.substring(i, i + 40000).lastIndexOf(".")
+      console.log(i)
+      } else {
+        data.push(text.substring(i))
+        i = text.length
+        console.log(i)
+      }
+    }
+    data.forEach((element) => {
+      axios
       .post("https://api.monkeylearn.com/v3/extractors/ex_Y8EEfTKJ/extract/", {
-        "data": ["Google is an American multinational technology company that specializes in Internet-related services and products. These include online advertising technologies, search, cloud computing, software, and hardware. Google was founded in 1998 by Larry Page and Sergey Brin while they were Ph.D. students at Stanford University, in California."]
+        "data": [element]
           }, {
         headers: {
             Authorization:"Token df54194010c9c38f93075ca244fe4ff57b165c23",
@@ -35,15 +61,19 @@ export default function DetailsSearch({navigation}) {
       .then(function (response) {
         // console.log(response.data);
         // console.log(response.data[0]['extractions']);
-        sentences = []
+        
         response.data[0]['extractions'].forEach(
             (item) => {
+              if (item) {
             sentences.push(item['parsed_value'])
+              }
         })
       })
       .catch(function (error) {
         console.log("Not working", error);
       });
+    })
+    
   };
 ;
   
@@ -67,9 +97,11 @@ export default function DetailsSearch({navigation}) {
   } 
   const getDetailedSentences = () => {
       detailedSentences = []
-      sentences.forEach((sentence) => {
-          getSimilarity(sentence, value1)
-      })
+      // sentences.forEach((sentence) => {
+        for (let i = 0; i < 10; i++) {
+          getSimilarity(sentences[i], query)
+        }
+      // })
       
   }
   const checkdSSize = () => {
@@ -88,6 +120,7 @@ export default function DetailsSearch({navigation}) {
       console.log(detailedSentences)
     }
   }
+  
   return (
     <ImageBackground source={require('../images/bg2.png')} 
                 style={{width: '100%', height: '100%'}}>
@@ -100,12 +133,14 @@ export default function DetailsSearch({navigation}) {
                 <View style={styles.textBox}>
                     <TextInput style={styles.textInput}
                     placeholder='Search Details..'
+                    onChangeText={value => setQuery(value)}
+                      value={query}
                     //underlineColorAndroid='transparent'
                     >    
                     </TextInput>
                 </View>
+               
                 <TouchableOpacity onPress={() => {
-          getSentences();
           getDetailedSentences();
           checkdSSize();
           // console.log(similarityTrack)
@@ -125,9 +160,7 @@ export default function DetailsSearch({navigation}) {
                 <View> 
                     <ScrollView style={scrollContainer}>
                         <Text style={flatText}>test</Text>
-                        <Text style={flatText}>test</Text>
-                        <Text style={flatText}>test</Text>
-                        <Text style={flatText}>test</Text>
+                        
                        
 
                     </ScrollView>
