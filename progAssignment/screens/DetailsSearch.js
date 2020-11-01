@@ -82,7 +82,7 @@ export default function DetailsSearch({route, navigation}) {
         }
       }).then(function(response) {
         setST(similarityTrack.filter(obj => obj.score != undefined))
-        if (response.data['similarity_score'] >= .1) {
+        if (response.data['similarity_score'] >= .3) {
           addDS(sentence)
             console.log(sentence)
         }
