@@ -29,7 +29,7 @@ export default function FileUpload({route, navigation}) {
             method: 'post',
             url: 'https://stormy-lake-40009.herokuapp.com/',
             data: {
-                "uri": "https://www.luc.edu/media/lucedu/writing/lucwcowls/The%20Essay%20-%20Purpose%20and%20Structure.pdf"
+                "uri": "https://www.otago.ac.nz/classics/otago055219.pdf"
             }
         }).then((res) =>{
            addEntry(res.data)

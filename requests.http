@@ -15,12 +15,17 @@ Content-Type: application/json
   "data": ["Elon Musk has shared a photo of the spacesuit designed by SpaceX. This is the second image shared of the new design and the first to feature the spacesuit’s full-body look."]
 }
 ###
-curl -X POST -d "text_1=Hey guys my name jeff&text_2=who is jeff?&api_key=2IlEShMFGvqsg1zFZfHpxw3v1cHuTUPt9szX0GGrvyo" https://apis.paralleldots.com/v4/similarity
+curl -X POST -d "text_1=Hey guys my name jeff&text_2=who is jeff and fdjlk;jfdlkfjdsafl;kdsajf;ldksajfdslakfj;dslakfjdslafjdslk?&api_key=2IlEShMFGvqsg1zFZfHpxw3v1cHuTUPt9szX0GGrvyo" https://apis.paralleldots.com/v4/similarity
 ###
 POST https://apis.paralleldots.com/v4/similarity
 Content-Type: application/x-www-form-urlencoded
 
 text_1=Hey guys my name jeff&text_2=who is jeff?&api_key=2IlEShMFGvqsg1zFZfHpxw3v1cHuTUPt9szX0GGrvyo
+###
+POST https://apis.paralleldots.com/v4/similarity
+Content-Type: application/x-www-form-urlencoded
+
+text_1=Hey guys my name jeff&text_2=who is jeff?&api_key=7asa4SK4LE9QKuSvwSfeavzZHXaklxGc1s3TTBNUzIs
 ###
 POST https://upload.box.com/api/2.0/files/content/
 Authorization: Bearer [ACCESS_TOKEN]

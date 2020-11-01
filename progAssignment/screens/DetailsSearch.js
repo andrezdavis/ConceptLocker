@@ -19,15 +19,15 @@ export default function DetailsSearch({route, navigation}) {
   let {flatText, textBox, textInput, scrollContainer,button,buttonText} = styles;
   const [query, setQuery] = useState("");
   const [detailedSentences, setDS] = useState([])
-  let sentences = []
+  const [sentences, setSen] = useState([])
   const [similarityTrack, setST] = useState([])
+  const addMessage = (newMessage) => setSen(state => [...state, newMessage])
+  const addDS = (newMessage) => setDS(state => [...state, newMessage])
+  const addST = (newMessage) => setST(state => [...state, newMessage])
   // const [data, setData] = useState([]);
-  useEffect(() => {
-    
-    getSentences(route.params.text.toString())
-  }, []);
+  
   let {id, name, text} = route.params
-  const getSentences = async (text) => {
+  const getSentences = (text) => {
     text = text.replace(/(\r\n|\n|\r)/gm," ");
     text = text.replace(/\s+/g," ");
     text = text.replace(/(\\|-)/gm,"");
@@ -36,19 +36,16 @@ export default function DetailsSearch({route, navigation}) {
     let i = 0
     let data = []
     for (i = 0; i < text.length;) {
-      console.log('big money')
       if (i + 40000 < text.length) {
       data.push(text.substring(i, text.substring(i, i + 40000).lastIndexOf(".")))
       i+=text.substring(i, i + 40000).lastIndexOf(".")
-      console.log(i)
       } else {
         data.push(text.substring(i))
         i = text.length
-        console.log(i)
       }
     }
-    data.forEach(async(element) => {
-      await axios
+    data.forEach((element) => {
+      axios
       .post("https://api.monkeylearn.com/v3/extractors/ex_Y8EEfTKJ/extract/", {
         "data": [element]
           }, {
@@ -59,51 +56,51 @@ export default function DetailsSearch({route, navigation}) {
       }
       )
       .then(function (response) {
-        // console.log(response.data);
-        // console.log(response.data[0]['extractions']);
-        
         response.data[0]['extractions'].forEach(
             (item) => {
-              if (item) {
-            sentences.push(item['parsed_value'])
-              }
+              addMessage(item['parsed_value'])
         })
+        console.log(sentences.toString())
+        getDetailedSentences();
+        
       })
       .catch(function (error) {
-        console.log("Not working", error);
+        console.log(error);
       });
     })
     
   };
-;
+
   
   const getSimilarity = (sentence, phrase) => {
     axios({
         method: 'post',
         url: 'https://apis.paralleldots.com/v4/similarity',
-        data: "text_1=" + sentence + "&text_2=" + phrase + "&api_key=2IlEShMFGvqsg1zFZfHpxw3v1cHuTUPt9szX0GGrvyo",
-        // data: "text_1=Hey guys my name jeff&text_2=who is jeff?&api_key=2IlEShMFGvqsg1zFZfHpxw3v1cHuTUPt9szX0GGrvyo",
+        data: "text_1=" + sentence + "&text_2=" + phrase + "&api_key=7asa4SK4LE9QKuSvwSfeavzZHXaklxGc1s3TTBNUzIs",
         headers: {
-          'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-          'Access-Control-Allow-Origin': '*'
+          'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
         }
       }).then(function(response) {
         setST(similarityTrack.filter(obj => obj.score != undefined))
-        console.log("similarityTrack") 
-        if (response.data['similarity_score'] >= .2) {
-            setDS([...detailedSentences, sentence])
+        if (response.data['similarity_score'] >= .1) {
+          addDS(sentence)
+            console.log(sentence)
         }
-        setST([...similarityTrack, {"score" : response.data['similarity_score'], "sentence": sentence}])
+        addST({"score" : response.data['similarity_score'], "sentence": sentence})
       }).catch(function (error) {
-        console.log("Not working", error);
+        console.log(error);
       });
   } 
+
   const getDetailedSentences = () => {
-      sentences.forEach((sentence) => {
+    console.log('inside get details')
+    setDS([])
+    setST([])
+        sentences.forEach((sentence) => {
           getSimilarity(sentence, query)
-      })
-      detailedSentences.forEach(val => console.log(val))
-      similarityTrack.forEach(val => console.log(val))
+          })
+          // sentences.slice(i, i + 4).join(' ')
+          
       checkdSSize();
 
   }
@@ -111,12 +108,12 @@ export default function DetailsSearch({route, navigation}) {
     if (detailedSentences.length == 0) {
       similarityTrack.sort(function(a, b){return b[0]-a[0]})
       if (similarityTrack.length == 0 || similarityTrack[0] === undefined ) {
-        setDS([...detailedSentences])
+        addDS()
       }
-      else if(similarityTrack[0].score === undefined || similarityTrack[0].score < .2) {
-        setDS([...detailedSentences, "there are no mtaches"])
+      else if(similarityTrack[0].score === undefined || similarityTrack[0].score < .05) {
+        addDS()
       } else {
-        setDS([...detailedSentences, similarityTrack[0]])
+        addDS(similarityTrack[0])
       }
       
     }
@@ -136,13 +133,13 @@ export default function DetailsSearch({route, navigation}) {
                     placeholder='Search Details..'
                     onChangeText={value => setQuery(value)}
                       value={query}
-                    //underlineColorAndroid='transparent'
                     >    
                     </TextInput>
                 </View>
                
                 <TouchableOpacity onPress={() => {
-          getDetailedSentences();
+    getSentences(route.params.text.toString())
+
       }}>
         <View style={styles.button}>
           <Text 
