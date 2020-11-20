@@ -1,5 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useContext} from "react";
+import Icon from 'react-native-vector-icons/Ionicons';
+import { FAB } from 'react-native-paper';
+
 import axios from "axios";
 import {
   StyleSheet,
@@ -8,6 +11,9 @@ import {
   TextInput,
   TouchableOpacity,
   ImageBackground,
+  Keyboard,
+  TouchableWithoutFeedback,
+  ActivityIndicator,
   // FlatList,
 } from "react-native";
 import {FlatList, ScrollView} from 'react-native-gesture-handler';
@@ -16,7 +22,7 @@ import ThemeContext from "../contexts/ThemeContext";
 
 
 export default function DetailsSearch({route, navigation}) {
-  let {flatText, textBox, textInput, scrollContainer,button,buttonText} = styles;
+  let {flatText, textBox, loading, textInput, scrollContainer,button,buttonText,buttonText2,anotherFilebutton,fab} = styles;
   const [query, setQuery] = useState("");
   const [detailedSentences, setDS] = useState([])
   const [sentences, setSen] = useState([])
@@ -24,10 +30,25 @@ export default function DetailsSearch({route, navigation}) {
   const addMessage = (newMessage) => setSen(state => [...state, newMessage])
   const addDS = (newMessage) => setDS(state => [...state, newMessage])
   const addST = (newMessage) => setST(state => [...state, newMessage])
-  // const [data, setData] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+
+
+  // function onSaveDetail() {
+  //   navigation.state.params.addDetail({ query, detailedSentences})
+  // }
   
+  if(isLoading) {
+    return(
+        <View style={styles.loading}>
+            <ActivityIndicator size="large"/>
+        </View>
+    );
+  }
+
   let {id, name, text} = route.params
+
   const getSentences = (text) => {
+    setLoading(true);
     text = text.replace(/(\r\n|\n|\r)/gm," ");
     text = text.replace(/\s+/g," ");
     text = text.replace(/(\\|-)/gm,"");
@@ -60,11 +81,13 @@ export default function DetailsSearch({route, navigation}) {
             (item) => {
               addMessage(item['parsed_value'])
         })
+        setLoading(false);
         console.log(sentences.toString())
         getDetailedSentences();
         
       })
       .catch(function (error) {
+        setLoading(false);
         console.log(error);
       });
     })
@@ -115,60 +138,53 @@ export default function DetailsSearch({route, navigation}) {
       } else {
         addDS(similarityTrack[0])
       }
-      
     }
   }
   
   return (
-    <ImageBackground source={require('../images/bg2.png')} 
-                style={{width: '100%', height: '100%'}}>
-                <View>
-                    <Text style={{fontSize:40,
-                     color:"#2F2F2F",
-                     alignSelf:"center",
-                     marginTop:50}}>Details</Text>
-                </View>
-                <View style={styles.textBox}>
-                    <TextInput style={styles.textInput}
-                    placeholder='Search Details..'
-                    onChangeText={value => setQuery(value)}
-                      value={query}
-                    >    
-                    </TextInput>
-                </View>
-               
-                <TouchableOpacity onPress={() => {
-    getSentences(route.params.text.toString())
+    <ImageBackground source={require('../images/bg2.png')} style={{width: '100%', height: '100%'}}>
+      <View>
+          <Text style={{fontSize:40,
+            color:"#2F2F2F",
+            alignSelf:"center",
+            marginTop:50}}>Details</Text>
+      </View>
 
-      }}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.textBox}>
+            <TextInput style={styles.textInput}
+            placeholder='Search Details..'
+            onChangeText={value => setQuery(value)}
+              value={query}
+            >    
+            </TextInput>
+        </View>
+      </TouchableWithoutFeedback>
+
+      
+      <TouchableOpacity onPress={() => { getSentences(route.params.text.toString())}}>
         <View style={styles.button}>
-          <Text 
-          style={styles.buttonText}>Search</Text>
-      </View>
+          <Icon name="ios-search" color="#FFF" size={20}/>
+          <Text style={styles.buttonText}>  Search</Text>
+        </View>
       </TouchableOpacity>
+
       <TouchableOpacity onPress={()=>navigation.navigate('File Upload')}>
-    <View style={styles.button}>
-          <Text 
-          style={styles.buttonText}>Upload Another File</Text>
+        <View style={styles.anotherFilebutton}>
+          <Icon name="ios-undo" color="#2F2F2F" size={20}/>
+          <Text style={styles.buttonText2}>  Upload Another File</Text>
+        </View>
+      </TouchableOpacity>
+
+      <View> 
+          <ScrollView style={scrollContainer}>
+              <Text style={flatText}>{detailedSentences}</Text>
+            </ScrollView>
       </View>
-    </TouchableOpacity>
-                <View> 
-                    <ScrollView style={scrollContainer}>
-                        <Text style={flatText}>{detailedSentences}</Text>
-                        
-                       
 
-                    </ScrollView>
-                </View>
-                
-                
+      <FAB style={fab} small icon='plus' label='Add details' onPress={()=> navigation.navigate('History', {query, detailedSentences})}/>
 
-            </ImageBackground>
-      
-
-      
-      
-      
+    </ImageBackground> 
   );
 }
 
@@ -198,7 +214,6 @@ textStyle: {
     fontSize: 30,
     color:"white",
     marginTop:60,
-    //fontFamily:"SemiBold",
     textAlign: 'center', 
     alignSelf:"center",
     alignItems: 'center'
@@ -216,7 +231,6 @@ uploadStyle: {
     color:"#FFFFFF",
     alignSelf:"center",
 },
-
 listHeader: {
     backgroundColor:"#C3C2C2",
     alignItems: "center",
@@ -226,88 +240,96 @@ listHeader: {
     borderBottomWidth: 1,
     borderBottomColor: "#5C5C5C",
 },
-scrollContainer: {
-    height: "30%",
-    marginBottom: 100,
-    backgroundColor: "#FFF",
-},
-flatText: {
-    marginVertical: 10,
-    marginLeft: 10,
-    justifyContent: 'center',
-    alignItems:'center',
-},
 deleteText: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-end',
     color: 'red',
 },
+textBox: {
+    flexDirection:"row",
+    alignItems:"center",
+    marginHorizontal:20,
+    borderWidth:1,
+    marginTop:15,
+    paddingHorizontal:10,
+    borderColor:"#969696",
+    backgroundColor:"#FFF",
+    borderRadius:23,
+    paddingVertical:10,
+},
+textInput: {
+    alignSelf: 'stretch',
+    color: '#000000',
+    backgroundColor: '#FFF',
+},
+listContainer: {
+    flexDirection: 'row',
+    padding: 5,
+},
+dataContainer:{
+    padding: 10,
+    paddingTop: 5,
+},
+scrollContainer: {
+    marginTop: 20,
+    backgroundColor: "#FFF",
+    marginLeft: 10,
+    marginRight: 10,
+    bottom: 5,
+    height: 400
+},
+flatText: {
+    marginVertical: 5,
+    marginLeft: 10,
+},
 button: {
-    marginHorizontal:55,
+    flexDirection:"row",
+    marginHorizontal:20,
     alignItems:"center",
     justifyContent:"center",
-    marginBottom:60,
+    marginTop:5,
     backgroundColor:"#2F2F2F",
-    paddingVertical:12,
+    paddingVertical:8,
     borderRadius:23
 },
-buttonText: {
-    fontSize:18,
-    color:"white",
-    //fontFamily:"SemiBold"
+anotherFilebutton: {
+  flexDirection:"row",
+  marginHorizontal:20,
+  alignItems:"center",
+  justifyContent:"center",
+  marginTop:5,
+  borderWidth: 1,
+  borderColor: '#2F2F2F',
+  paddingVertical:7,
+  borderRadius:23
 },
-  textBox: {
-      flexDirection:"row",
-      alignItems:"center",
-      marginHorizontal:20,
-      borderWidth:1,
-      marginTop:15,
-      paddingHorizontal:10,
-      borderColor:"#969696",
-      backgroundColor:"#FFF",
-      borderRadius:23,
-      paddingVertical:10,
-  },
-  textInput: {
-      alignSelf: 'stretch',
-      color: '#000000',
-      backgroundColor: '#FFF',
-  },
-  listContainer: {
-      flexDirection: 'row',
-      padding: 5,
-  },
-  dataContainer:{
-      padding: 10,
-      paddingTop: 5,
-  },
-  scrollContainer: {
-      marginTop: 20,
-      backgroundColor: "#FFF",
-      marginLeft: 10,
-      marginRight: 10,
-      marginBottom: 10,
-      height: 550
-  },
-  flatText: {
-      marginVertical: 5,
-      marginLeft: 10,
-  },
-  button: {
-      marginHorizontal:55,
-      alignItems:"center",
-      justifyContent:"center",
-      marginTop:20,
-      backgroundColor:"#2F2F2F",
-      paddingVertical:12,
-      borderRadius:23
-  },
-  buttonText: {
-      fontSize:18,
-      color:"white",
-      //fontFamily:"SemiBold"
-  }
-  
+buttonText: {
+    fontSize:15,
+    color:"white",
+    fontWeight:"bold",
+},
+buttonText2: {
+  fontSize:15,
+  color:"#2F2F2F",
+},
+fab: {
+  backgroundColor:'#3498DB',
+  position: 'absolute',
+  margin: 20,
+  right:0,
+  bottom: 0,
+},
+loading: {
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  alignItems: 'center',
+  justifyContent: 'center',
+  opacity: 0.5,
+  backgroundColor: 'transparent',
+}
 }
 )

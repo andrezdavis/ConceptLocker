@@ -10,14 +10,15 @@ export default class Tutorial extends React.Component{
         return(
             <ImageBackground source={require('../images/bg4.png')} 
                 style={{width: '100%', height: '100%'}}>
-            <Text
-                 style={title}>Tutorial</Text>
-            <Text style={text1}>This app is purposed to users that want to seek more understanding on comprehension based topics. This is still in beta and we are hoping to deliver functionality geared toward mathematics. </Text>
-            <Text style={text1}>1. Upload a pdf or txt file. Then press 'Next'. </Text>
-            <Text style={text1}>2. Type in a phrase, at minimum, or a sentence. Must be at least 2 words.</Text>
-            <Text style={text1}>3. Click 'Start Detail Search' button.</Text>
+            <Text style={title}>Tutorial</Text>
+            <Text></Text>
 
-            <Text onPress={()=>navigate('Login')}
+            <Text style={text1}>This app is purposed to users that want to seek more understanding on comprehension based topics. This is still in beta and we are hoping to deliver functionality geared toward mathematics. </Text>
+            <Text style={text2}>1. Upload a pdf or txt file. Then press 'Next'.</Text>
+            <Text style={text2}>2. Type in a phrase, at minimum, or a sentence. Must be at least 2 words.</Text>
+            <Text style={text2}>3. Click 'Start Detail Search' button.</Text>
+
+            <Text onPress={()=>navigate('File Upload')}
                 style={buttonText}>Let's Start!</Text>
 
             </ImageBackground>
@@ -37,14 +38,24 @@ const styles = StyleSheet.create({
         color:"#696969",
         fontSize:28,
         paddingVertical:20,
-        marginTop: 80
+        marginTop: 59,
     },
     text1: {
         color: "#2C2C2C",
         alignSelf:"center",
-        fontSize: 17,
-        marginTop: 30,
-        paddingHorizontal: 20
+        fontSize: 15.5,
+        marginTop: 15,
+        paddingHorizontal: 20,
+        textAlign: "center",
+    },
+    text2: {
+        color: "#2C2C2C",
+        alignSelf:"center",
+        fontSize: 15.5,
+        fontWeight:"bold", 
+        marginTop: 18,
+        paddingHorizontal: 20,
+        textAlign: "center",
     }
 
 });

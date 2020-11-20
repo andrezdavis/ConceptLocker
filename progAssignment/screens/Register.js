@@ -1,6 +1,6 @@
 import React from 'react';
-import {Text,View,ImageBackground, TextInput,StyleSheet, TouchableOpacity} from 'react-native';
-import Icon from '@expo/vector-icons/AntDesign';
+import {Text,View,ImageBackground, TextInput,StyleSheet, TouchableOpacity,TouchableWithoutFeedback, Keyboard} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons'
 
 export default class Register extends React.Component{
 
@@ -17,36 +17,53 @@ export default class Register extends React.Component{
                  style={title}
                 >Sign Up</Text>
 
-                
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={textFieldemail}>
+                    <Icon name="ios-mail" color="#969696" size={24}/>
                     <TextInput 
                         placeholder="Email"
                         placeholderTextColor="#696969"
                         style={{paddingHorizontal:10}}
                     />
                 </View>
+                </TouchableWithoutFeedback>
+
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={textFieldepw}>
-                   <TextInput 
+                    <Icon name="ios-lock" color="#969696" size={24}/>
+                    <TextInput 
                         secureTextEntry
                         placeholder="Password"
                         placeholderTextColor="#696969"
                         style={{paddingHorizontal:10}}
                     />
                 </View>
+                </TouchableWithoutFeedback>
+
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={textFieldepw}>
-                   <TextInput 
+                    <Icon name="ios-lock" color="#969696" size={24}/>
+                    <TextInput 
                         secureTextEntry
                         placeholder="Confirm Password"
                         placeholderTextColor="#696969"
                         style={{paddingHorizontal:10}}
                     />
                 </View>
+                </TouchableWithoutFeedback>
+
                 <TouchableOpacity onPress={()=>navigate('Login')}>
                 <View style={button}>
                     <Text 
                     style={buttonText}>Register</Text>
                 </View>
                 </TouchableOpacity>
+                <Text onPress={()=>navigate('Login')}
+                style={{
+                    alignSelf:"center",
+                    color:"#000000",
+                    paddingVertical:20
+                }}>I already have an account!</Text>
                 
             </ImageBackground>
         )
@@ -59,7 +76,7 @@ const styles = StyleSheet.create({
         color:"#2F2F2F",
         //fontFamily:"SemiBold",
         alignSelf:"center",
-        marginTop:200,
+        marginTop:150,
     },
     
     textFieldemail: {

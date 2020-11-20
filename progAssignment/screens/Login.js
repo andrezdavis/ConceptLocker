@@ -1,8 +1,8 @@
 import React from 'react';
-import {Text,View,ImageBackground, TextInput, StyleSheet} from 'react-native';
+import {Text,View,ImageBackground, TextInput, StyleSheet, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import * as Font from 'expo-font';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-// import Icon from 'npm install @expo/vector-icons';
+import Icon from 'react-native-vector-icons/Ionicons'
 
 export default class Login extends React.Component{
 
@@ -10,22 +10,26 @@ export default class Login extends React.Component{
 
         const {navigate} = this.props.navigation
         let {title,button,buttonText,textFieldemail,textFieldepw} = styles;
+
         return(
             <ImageBackground source={require('../images/bg.png')} 
                 style={{width: '100%', height: '100%'}}>
                 <Text style={title}>Concept Locker</Text>
 
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={textFieldemail}>
-                    {/* <Icon name="mail" color="#969696" size={24}/> */}
+                    <Icon name="ios-mail" color="#969696" size={24}/>
                     <TextInput 
                         placeholder="Email"
                         placeholderTextColor="#696969"
                         style={{paddingHorizontal:10}}
                     />
-
                 </View>
+                </TouchableWithoutFeedback>
+
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={textFieldepw}>
-                    {/* <Icon name="lock" color="#969696" size={24}/> */}
+                    <Icon name="ios-lock" color="#969696" size={24}/>
                     <TextInput 
                         secureTextEntry
                         placeholder="Password"
@@ -33,19 +37,19 @@ export default class Login extends React.Component{
                         style={{paddingHorizontal:10}}
                     />
                 </View>
-            <TouchableOpacity onPress={()=>navigate('File Upload')}>
-            <View style={button}>
-                <Text 
-                    style={buttonText}>Log in</Text>
-                </View>
-            </TouchableOpacity>
-                
+                </TouchableWithoutFeedback>
 
+                <TouchableOpacity onPress={()=>navigate('Tutorial')}>
+                <View style={button}>
+                    <Text 
+                        style={buttonText}>Log in</Text>
+                    </View>
+                </TouchableOpacity>
+                
                 <Text onPress={()=>navigate('Register')}
                 style={{
                     alignSelf:"center",
                     color:"#000000",
-                    //fontFamily:"SemiBold",
                     paddingVertical:20
                 }}>Don't have an account?</Text>
             
